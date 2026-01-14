@@ -36,4 +36,4 @@ pip install .
 
 ---
 
-## Use Case Example
+## Example
