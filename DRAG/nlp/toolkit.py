@@ -1,6 +1,6 @@
-from Wisp.nlp.preprocess import preprocessor
-from Wisp.nlp.models.loaders import SentenceEmbedder, Reranker
-from Wisp.nlp.mathlib import overlap_sim_matrix, embed_sim_matrix, markov_chain, max_profit_route
+from .preprocess import preprocessor
+from .models.loaders import SentenceEmbedder, Reranker
+from .mathlib import overlap_sim_matrix, embed_sim_matrix, markov_chain, max_profit_route
 import numpy as np
 from typing import List, Union, Tuple
 
@@ -12,7 +12,6 @@ class toolkit:
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
-        # self.reranker = Reranker(reranker_path, reranker_tokenizer_path)
 
     def extract_file(self, text: str, num_labels: int = 3) -> dict:
         """
@@ -32,7 +31,7 @@ class toolkit:
         sim_matrix = self.doc_graph(tf_matrix, embeddings)
         # Create a list of the top k words for the topic model
         metadata = {
-            "labels" : [original_words[idx] for idx in self.topic_model(bm25_matrix, top_k=num_labels)]
+            "_tags" : [original_words[idx] for idx in self.topic_model(bm25_matrix, top_k=num_labels)]
         }
         return {
             "embeddings": embeddings,

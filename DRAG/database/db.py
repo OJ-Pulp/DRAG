@@ -1,13 +1,13 @@
 from typing import List
 import sqlite3
-from Wisp.database._vdb import VectorDB
+from ._vdb import VectorDB
 import json
 import pickle
 import os
 
 class DocumentDatabase:
     def __init__(self, db_path):
-        self.db_path = db_path
+        self.db_path = db_path if db_path.endswith(".sqlite") else db_path + ".sqlite"
         self.conn = None
         self._initialize_database()
         self.vector_store = VectorDB(index_path=self.db_path.replace(".sqlite", ".index"))
@@ -58,13 +58,21 @@ class DocumentDatabase:
 
         self.conn.commit()
 
-    def delete_db(self, db_name: str) -> None:
+    def delete_db(self, db_path: str) -> None:
         """Delete the current database."""
-        if self.db_path != db_name:
+        # Ensure the db_path ends with .sqlite
+        if not db_path.endswith(".sqlite"):
+            db_path += ".sqlite"
+
+        # Prevent deletion of the currently connected database
+        if self.db_path == db_path:
             raise ValueError("Cannot delete the current database. Please close the connection first.")
-        if os.path.exists(db_name):
-            os.remove(db_name)
-            os.remove(db_name.replace(".sqlite", ".index"))
+        # Delete the database file and its associated index file
+        if os.path.exists(db_path) and os.path.exists(db_path.replace(".sqlite", ".index")):
+            os.remove(db_path)
+            os.remove(db_path.replace(".sqlite", ".index"))
+        else:
+            raise ValueError("Database path is invalid or does not exist. Make sure it ends with '.sqlite'")
 
     def ingest_file(self, source, matrix, sim_matrix, words, sentences, sentence_scores, sentence_lengths, embeddings, metadata):
         cur = self.conn.cursor()

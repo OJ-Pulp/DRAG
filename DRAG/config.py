@@ -13,11 +13,9 @@ def package_path(relative_path):
     return join_paths(base_path, relative_path)
 
 # Set NLTK's data path to be inside the resource folder
-nltk_path = []
 nltk_path.append(package_path("nlp/models/nltk/data"))
 
 # Create Global Paths to model directories
 STOP_WORDS_DIR = package_path("nlp/models/nltk/stopwords.json")
 EMBEDDING_DIR = package_path("nlp/models/all-MiniLM-L6-v2-onnx")
 RERANKER_DIR = package_path("nlp/models/bge-reranker-onnx")
-DATABASE_DIR = os.getcwd()

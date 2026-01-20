@@ -1,14 +1,11 @@
-from Wisp import config
-from Wisp.database.db import DocumentDatabase
-from Wisp.nlp.toolkit import toolkit
+from . import config
+from .database.db import DocumentDatabase
+from .nlp.toolkit import toolkit
 from typing import List
 
-class Wisp:
-    def __init__(self, db_name: str = "Wisp.sqlite", db_path: str = None, alpha: float = 0.55, beta: float = 0.35, gamma: float = 0.10) -> None:
-        if db_path is not None:
-            full_path = config.join_paths(db_path, db_name)
-        else:
-            full_path = config.join_paths(config.DATABASE_DIR, db_name)
+class DRAG:
+    def __init__(self, db_name, db_path, alpha: float = 0.55, beta: float = 0.35, gamma: float = 0.10) -> None:
+        full_path = config.join_paths(db_path, db_name)
         self.db = DocumentDatabase(full_path)
         self.alpha = alpha
         self.beta = beta
@@ -18,20 +15,22 @@ class Wisp:
                                config.STOP_WORDS_DIR,
                                alpha, beta, gamma)
     
-    def change_db(self, db_name: str) -> None:
+    def change_db(self, db_path, db_name: str) -> None:
         """Change the database to a new one."""
         self.db.close()
-        self.db = DocumentDatabase(config.DATABASE_DIR + db_name)
+        self.db = DocumentDatabase(config.join_paths(db_path, db_name))
     
-    def delete_db(self, db_name: str) -> None:
+    def delete_db(self, db_path, db_name: str) -> None:
         """Delete the current database."""
-        self.db.delete_db(db_name)
+        self.db.delete_db(config.join_paths(db_path, db_name))
 
-    def upload(self, text: str, source: str) -> str:
+    def upload(self, text: str, source: str, metadata: dict = None) -> str:
         """Add a new document to the database."""
         data = self.toolkit.extract_file(text)
         data["source"] = source
-        return self.db.ingest_file(**data)
+        data["metadata"] = data.get("metadata", {}) | (metadata or {})
+        doc_id = self.db.ingest_file(**data)
+        return doc_id
 
     def delete(self, document_id: str) -> None:
         """
@@ -81,7 +80,7 @@ class Wisp:
         Query a specific document and return the query focused summarization.
         """
         # 1. Get the document matrix for the specified document
-        doc_matrix, document_sent_scores,  sentence_lengths = self.db.document_data(document_id, ["sim_matrix", "sentence_scores", "sentence_lengths"])
+        doc_matrix, document_sent_scores, sentence_lengths = self.db.document_data(document_id, ["sim_matrix", "sentence_scores", "sentence_lengths"])
         num_sentences = len(sentence_lengths)
         # 2. Tokenize the query
         query_terms = self.toolkit.preprocess_query(query)
