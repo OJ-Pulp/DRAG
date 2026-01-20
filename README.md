@@ -19,8 +19,6 @@ Osiris Terry, [arXiv preprint, 2026](https://arxiv.org/abs/xxxx.xxxxx)
 }
 ```
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 ## Installation
 
 ```bash
@@ -415,3 +413,4 @@ drag = DRAG(db_name="db.db", db_path="/data", alpha=0.55, beta=0.35, gamma=0.10)
 ## License
 
 Apache License 2.0
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
