@@ -7,6 +7,7 @@ DRAG (Document Retrieval and Generation) is a query-focused document summarizati
 If you use DRAG in your research, please cite our paper:
 
 **DRAG Me to the Source: Escaping the Chunking Trap in Extractive RAG**  
+
 Osiris Terry, [arXiv preprint, 2026](https://arxiv.org/abs/xxxx.xxxxx)
 
 ```bibtex
@@ -22,7 +23,7 @@ Osiris Terry, [arXiv preprint, 2026](https://arxiv.org/abs/xxxx.xxxxx)
 ## Installation
 
 ```bash
-pip install git+https://github.com/yourusername/DRAG.git
+pip install git+https://github.com/OJ-Pulp/DRAG.git
 ```
 
 ## Quick Start
