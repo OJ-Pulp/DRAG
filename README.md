@@ -1,4 +1,4 @@
-# DRAG API Documentation
+# DRAG
 
 ## Overview
 
